@@ -14,7 +14,7 @@ GKC Dashboard is a web application built with Next.js, Tailwind CSS, and TypeScr
 To get started with the project, clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/yourusername/gkc-dashboard.git
+git clone https://github.com/mohitagrawal939/gkc-dashboard.git
 cd gkc-dashboard
 npm install
 ```
