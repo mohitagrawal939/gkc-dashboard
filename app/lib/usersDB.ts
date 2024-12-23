@@ -33,12 +33,7 @@ const UserSchema = z.object({
 });
 const CreateUser = UserSchema;
 
-const UpdateUser = UserSchema.omit({ email: true }).extend({
-    password: z
-        .string()
-        .min(8, { message: "Must have at least 8 character" })
-        .optional(),
-});
+const UpdateUser = UserSchema.omit({ email: true, password: true });
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredUsers(query: string, currentPage: number) {
@@ -176,32 +171,42 @@ export async function updateUser(
         status: formData.get("status"),
         firstName: formData.get("first_name"),
         lastName: formData.get("last_name"),
-        password: formData.get("password"),
     });
 
+    let password = formData.get("password")?.toString();
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
             message: "Missing Fields. Failed to Update User.",
         };
+    } else if (validatedFields.success && password && password.length < 8) {
+        return {
+            errors: {
+                password: ["Password must have at least 8 characters"],
+            },
+        };
     }
 
     // Prepare data for insertion into the database
-    const { status, firstName, lastName, password } = validatedFields.data;
+    const { status, firstName, lastName } = validatedFields.data;
+    let client = postgres(`${process.env.POSTGRES_URL!}`);
     try {
-        let hashedPassword;
-        let query = `status = ${status}, updated_at = ${new Date()}, first_name = ${firstName}, last_name = ${lastName}`;
+        let hashedPassword = null;
         if (password) {
             hashedPassword = hashSync(password, 10);
-            query = query + `, password = ${hashedPassword}`;
+            await client`
+                UPDATE gkc_users
+                SET status = ${status}, updated_at = ${new Date()}, first_name = ${firstName}, last_name = ${lastName}, password=${hashedPassword}
+                WHERE id = ${id};
+            `;
+        } else {
+            await client`
+                UPDATE gkc_users
+                SET status = ${status}, updated_at = ${new Date()}, first_name = ${firstName}, last_name = ${lastName}
+                WHERE id = ${id};
+            `;
         }
-        let client = postgres(`${process.env.POSTGRES_URL!}`);
-        await client`
-            UPDATE gkc_users
-            SET ${query}
-            WHERE id = ${id}
-        `;
         client.end();
     } catch (error) {
         console.log("Database Error:", error);
