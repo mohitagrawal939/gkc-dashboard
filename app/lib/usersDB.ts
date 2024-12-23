@@ -20,6 +20,8 @@ export type UserState = {
     message?: string | null;
 };
 
+const ITEMS_PER_PAGE = parseInt(process.env.ITEMS_PER_PAGE!);
+
 const UserSchema = z.object({
     firstName: z.string().min(1, { message: "Must have at least 1 character" }),
     lastName: z.string().min(1, { message: "Must have at least 1 character" }),
@@ -35,7 +37,6 @@ const CreateUser = UserSchema;
 
 const UpdateUser = UserSchema.omit({ email: true, password: true });
 
-const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredUsers(query: string, currentPage: number) {
     noStore();
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
