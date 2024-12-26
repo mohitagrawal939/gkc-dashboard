@@ -8,8 +8,8 @@ export const metadata: Metadata = {
         default: "GKC Dashboard by @mohitagrawal939",
     },
     description:
-        "The official Next.js Course Dashboard, built with App Router.",
-    metadataBase: new URL("https://nextjs-dashboard-acme.vercel.app"),
+        "GKC Dashboard with official NextJS dahboard template with APP router.",
+    metadataBase: new URL("hhttps://gkc-dashboard.vercel.app"),
     authors: [
         {
             name: "Mohit Agrawal",
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
     openGraph: {
         title: "GKC Dashboard",
         description:
-            "The official Next.js Learn Dashboard built with App Router.",
-        url: "https://nextjs-dashboard-acme.vercel.app",
+            "GKC Dashboard with official NextJS dahboard template with APP router.",
+        url: "https://gkc-dashboard.vercel.app/",
         type: "website",
     },
     twitter: {
         site: "@gkc",
         description:
-            "The official Next.js Learn Dashboard built with App Router.",
+            "GKC Dashboard with official NextJS dahboard template with APP router.",
         title: "GKC Dashboard by @mohitagrawal939",
         creator: "@mohitagrawal939",
     },
