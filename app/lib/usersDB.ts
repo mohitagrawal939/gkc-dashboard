@@ -8,6 +8,7 @@ import postgres from "postgres";
 import { hashSync } from "bcrypt-ts";
 import { unstable_noStore as noStore } from "next/cache";
 import { Users } from "./definitions";
+import { AuthError } from "next-auth";
 
 export type UserState = {
     errors?: {
@@ -231,7 +232,7 @@ export async function deleteUser(id: number) {
 
 export async function authenticate(
     prevState: string | undefined,
-    formData: any
+    formData: FormData
 ) {
     try {
         await signIn("credentials", {
@@ -239,8 +240,13 @@ export async function authenticate(
             password: formData.get("password") as string,
         });
     } catch (error) {
-        if ((error as Error).message.includes("CredentialsSignin")) {
-            return "CredentialSignin";
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case "CredentialsSignin":
+                    return "Invalid credentials.";
+                default:
+                    return "Something went wrong.";
+            }
         }
         throw error;
     }
