@@ -60,12 +60,11 @@ export default function LoginForm() {
                             <input
                                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                                 id="password"
-                                // type="password"
                                 type={showPassword ? "text" : "password"}
                                 name="password"
                                 placeholder="Enter password"
                                 required
-                                minLength={6}
+                                minLength={8}
                             />
                             <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                             <button
@@ -84,14 +83,14 @@ export default function LoginForm() {
                 </div>
                 <LoginButton />
                 <div className="flex h-8 items-end space-x-1">
-                    {code === "CredentialSignin" && (
+                    {code && (
                         <>
                             <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
                             <p
                                 aria-live="polite"
                                 className="text-sm text-red-500"
                             >
-                                Invalid credentials
+                                {code}
                             </p>
                         </>
                     )}
